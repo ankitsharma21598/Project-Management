@@ -86,7 +86,7 @@ export const UPDATE_TASK_MUTATION = gql`
 `;
 
 export const UPDATE_TASK_STATUS_MUTATION = gql`
-  mutation UpdateTaskStatus($id: ID!, $status: String!) {
+  mutation UpdateTaskStatus($id: ID!, $status: TaskStatus!) {
     updateTask(id: $id, status: $status) {
       id
       status
@@ -101,8 +101,8 @@ export const DELETE_TASK_MUTATION = gql`
 `;
 
 export const ADD_TASK_COMMENT_MUTATION = gql`
-  mutation AddTaskComment($taskId: ID!, $content: String!) {
-    addTaskComment(taskId: $taskId, content: $content) {
+  mutation AddTaskComment($taskId: ID!, $content: String!, $authorEmail: String!) {
+    addTaskComment(taskId: $taskId, content: $content, authorEmail: $authorEmail) {
       id
       content
       authorEmail

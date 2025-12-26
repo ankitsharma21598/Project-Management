@@ -16,8 +16,8 @@ import {
   openEditProjectModal,
   closeEditProjectModal,
 } from "@/store/uiSlice";
-import { toast } from "sonner";
 import type { Project } from "@/types";
+import { toast } from "react-toastify";
 
 interface ProjectsResponse {
   projects: Project[];
@@ -43,7 +43,7 @@ const Projects = () => {
   });
 
   const [deleteProject] = useMutation(DELETE_PROJECT_MUTATION, {
-    refetchQueries: [{ query: PROJECTS_QUERY }],
+    refetchQueries: [{ query: PROJECTS_QUERY, variables: { organizationId: useAppSelector((state) => state.auth.user?.organizationId) } }],
   });
 
   const projects = data?.projects || [];

@@ -65,6 +65,7 @@ export default function ProjectModel(sequelize: Sequelize) {
     },
     {
       tableName: 'projects',
+      timestamps: true,
       underscored: true,
     }
   );

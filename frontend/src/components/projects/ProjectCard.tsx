@@ -83,7 +83,7 @@ export const ProjectCard = ({
         {project.dueDate && (
           <div className="flex items-center gap-1.5">
             <Calendar className="h-4 w-4" />
-            <span>{format(new Date(Number(project.dueDate)), "dd/MM/yyyy")}</span>
+            <span>{format(new Date(project.dueDate), "dd/MM/yyyy")}</span>
           </div>
         )}
         {project.tasks && (

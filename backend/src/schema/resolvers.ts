@@ -75,9 +75,11 @@ export const resolvers = {
     },
 
     projects: async (_: any, { organizationId }: { organizationId: string }, context: Context) => {
+      
       if (context.organizationId && organizationId !== context.organizationId) {
         throw new Error('Unauthorized');
       }
+      
       return await projectService.getAllProjects(organizationId);
     },
 
@@ -124,7 +126,9 @@ export const resolvers = {
       return await organizationService.createOrganization(args);
     },
 
-    updateOrganization: async (_: any, { id, ...input }: any) => {
+    updateOrganization: async (_: any, args: any) => {
+      console.log("Params ==> ",args);
+      const { id, input } = args;
       return await organizationService.updateOrganization(id, input);
     },
 
@@ -137,7 +141,9 @@ export const resolvers = {
       return await projectService.createProject(args, context);
     },
 
-    updateProject: async (_: any, { id, ...input }: any, context: Context) => {
+    updateProject: async (_: any, args: any, context: Context) => {
+      console.log("Params ==> ",args);
+      const { id, input } = args;
       return await projectService.updateProject(id, input, context);
     },
 
@@ -150,7 +156,9 @@ export const resolvers = {
       return await taskService.createTask(args);
     },
 
-    updateTask: async (_: any, { id, ...input }: any) => {
+    updateTask: async (_: any, args: any, context: Context) => {
+      console.log("Params ==> ",args);
+      const { id, input } = args;
       return await taskService.updateTask(id, input);
     },
 
@@ -159,11 +167,13 @@ export const resolvers = {
     },
 
     // Comment mutations
-    addComment: async (_: any, args: any) => {
+    addTaskComment: async (_: any, args: any) => {
+      console.log("Params ==>",args);
+      
       return await commentService.createComment(args);
     },
 
-    deleteComment: async (_: any, { id }: { id: string }) => {
+    deleteTaskComment: async (_: any, { id }: { id: string }) => {
       return await commentService.deleteComment(id);
     }
   },
@@ -173,17 +183,38 @@ export const resolvers = {
     organization: async (parent: any) => {
       if (!parent.organizationId) return null;
       return await organizationService.getOrganizationById(parent.organizationId);
-    }
+    },
+
+    createdAt: (parent: any) => parent.createdAt.toISOString(),
+
+    updatedAt: (parent: any) => parent.updatedAt.toISOString()
   },
 
   // Field resolvers
   Organization: {
     projects: async (parent: any) => {
       return await projectService.getAllProjects(parent.id);
-    }
+    },
+
+    createdAt: (parent: any) => parent.createdAt.toISOString(),
+
+    updatedAt: (parent: any) => parent.updatedAt.toISOString()
   },
 
   Project: {
+    status: (parent: any) => parent.status.toUpperCase(),
+
+    dueDate: (parent: any) => {
+      if (parent.dueDate) {
+        return parent.dueDate.toISOString();
+      }
+      return null;
+    },
+
+    createdAt: (parent: any) => parent.createdAt.toISOString(),
+
+    updatedAt: (parent: any) => parent.updatedAt.toISOString(),
+
     organization: async (parent: any) => {
       return await organizationService.getOrganizationById(parent.organizationId);
     },
@@ -198,18 +229,28 @@ export const resolvers = {
   },
 
   Task: {
+    status: (parent: any) => parent.status.toUpperCase(),
+
     project: async (parent: any) => {
       return await projectService.getProjectById(parent.projectId, {});
     },
 
     comments: async (parent: any) => {
       return await commentService.getCommentsByTask(parent.id);
-    }
+    },
+
+    createdAt: (parent: any) => parent.createdAt.toISOString(),
+
+    updatedAt: (parent: any) => parent.updatedAt.toISOString()
   },
 
   TaskComment: {
     task: async (parent: any) => {
       return await taskService.getTaskById(parent.taskId);
-    }
+    },
+
+    createdAt: (parent: any) => parent.createdAt.toISOString(),
+
+    updatedAt: (parent: any) => parent.updatedAt.toISOString()
   }
 };

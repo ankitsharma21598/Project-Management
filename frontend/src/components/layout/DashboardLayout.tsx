@@ -23,8 +23,7 @@ interface OrganizationVariables {
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { sidebarOpen } = useAppSelector((state) => state.ui);
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const {user } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const { data: orgsData } = useQuery<OrganizationsResponse, OrganizationVariables>(

@@ -16,8 +16,8 @@ import {
   openEditProjectModal,
   closeEditProjectModal,
 } from "@/store/uiSlice";
-import { toast } from "sonner";
 import type { Project } from "@/types";
+import { toast } from "react-toastify";
 
 interface ProjectsResponse {
   projects: Project[];

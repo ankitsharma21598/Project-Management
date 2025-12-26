@@ -65,7 +65,7 @@ app.use(
   '/graphql',
   express.json(),
   jwtAuthMiddleware,
-  expressMiddleware(apolloServer, {
+  expressMiddleware(apolloServer, {  
     context: async ({ req }: { req: AuthRequest }) => ({
       userId: req.userId,
       organizationId: req.organizationId,

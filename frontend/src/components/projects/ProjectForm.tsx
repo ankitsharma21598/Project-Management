@@ -19,6 +19,7 @@ import {
 import { PROJECTS_QUERY } from "@/graphql/queries";
 import { toast } from "sonner";
 import type { Project, ProjectStatus } from "@/types";
+import { useAppSelector } from "@/store/hooks";
 
 interface ProjectFormProps {
   project?: Project | null;
@@ -42,20 +43,31 @@ export const ProjectForm = ({ project, onClose }: ProjectFormProps) => {
   const [dueDate, setDueDate] = useState(
     project?.dueDate ? project.dueDate.split("T")[0] : ""
   );
+  
+  const organizationId = useAppSelector(
+    (state) => state.auth.user?.organizationId
+  );
+
 
   const [createProject, { loading: createLoading }] = useMutation<CreateProjectResponse>(
     CREATE_PROJECT_MUTATION,
     {
-      refetchQueries: [{ query: PROJECTS_QUERY }],
+      refetchQueries: [{ query: PROJECTS_QUERY, variables: { organizationId } }],
+      awaitRefetchQueries: true,
     }
   );
 
-  const [updateProject, { loading: updateLoading }] = useMutation<UpdateProjectResponse>(
-    UPDATE_PROJECT_MUTATION,
-    {
-      refetchQueries: [{ query: PROJECTS_QUERY }],
-    }
-  );
+  const [updateProject, { loading: updateLoading }] =
+  useMutation<UpdateProjectResponse>(UPDATE_PROJECT_MUTATION, {
+    refetchQueries: [
+      {
+        query: PROJECTS_QUERY,
+        variables: { organizationId },
+      },
+    ],
+    awaitRefetchQueries: true,
+  });
+
 
   const loading = createLoading || updateLoading;
 
@@ -71,7 +83,7 @@ export const ProjectForm = ({ project, onClose }: ProjectFormProps) => {
       toast.error("Due date must be in the future");
       return;
     }
-
+    
     try {
       if (isEditing) {
         await updateProject({
@@ -94,6 +106,7 @@ export const ProjectForm = ({ project, onClose }: ProjectFormProps) => {
               description: description || undefined,
               dueDate: dueDate || undefined,
             },
+            
           },
         });
         toast.success("Project created successfully");
@@ -161,6 +174,7 @@ export const ProjectForm = ({ project, onClose }: ProjectFormProps) => {
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="PLANNING">Planning</SelectItem>
                   <SelectItem value="ACTIVE">Active</SelectItem>
                   <SelectItem value="ON_HOLD">On Hold</SelectItem>
                   <SelectItem value="COMPLETED">Completed</SelectItem>

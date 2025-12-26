@@ -4,16 +4,16 @@ export interface Context {
 }
 
 export enum ProjectStatus {
-  PLANNING = 'planning',
-  ACTIVE = 'active',
-  ON_HOLD = 'on_hold',
-  COMPLETED = 'completed'
+  PLANNING = 'PLANNING',
+  ACTIVE = 'ACTIVE',
+  ON_HOLD = 'ON_HOLD',
+  COMPLETED = 'COMPLETED'
 }
 
 export enum TaskStatus {
-  TODO = 'todo',
-  IN_PROGRESS = 'in_progress',
-  DONE = 'done'
+  TODO = 'TODO',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE'
 }
 
 export interface TaskStats {
@@ -34,7 +34,6 @@ export interface UpdateOrganizationInput {
 }
 
 export interface CreateProjectInput {
-  organizationId: string;
   name: string;
   status?: ProjectStatus;
   description?: string;

@@ -248,3 +248,112 @@ mutation {
 ```
 
 ## 🏗️ Project Structure
+
+````
+
+backend/
+├── src/
+│   ├── config/
+│   ├── graphql/
+│   │   ├── typeDefs.ts
+│   │   └── resolvers.ts
+│   ├── models/
+│   ├── services/
+│   ├── middleware/
+│   ├── utils/
+│   └── server.ts
+├── Dockerfile
+├── package.json
+└── README.md
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the `backend` directory.
+
+```env
+NODE_ENV=development
+PORT=4000
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=project_management
+DB_USER=postgres
+DB_PASSWORD=postgres
+
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=7d
+
+CORS_ORIGIN=http://localhost:5173
+````
+
+---
+
+## ▶️ Run Locally
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+GraphQL Playground:
+
+```
+http://localhost:4000/graphql
+```
+
+---
+
+## ▶️ Run with Docker
+
+```bash
+docker build -t project-management-backend .
+docker run -p 4000:4000 project-management-backend
+```
+
+---
+
+## 🔑 Authentication
+
+- JWT-based authentication
+- Token must be sent in headers:
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## 📌 GraphQL Features
+
+### Queries
+
+- `me`
+- `organizations`
+- `projects`
+- `tasks`
+- `comments`
+
+### Mutations
+
+- `signup`, `signin`
+- `createOrganization`
+- `createProject`, `updateProject`
+- `createTask`, `updateTask`
+- `addComment`
+
+---
+
+## 🗄️ Database
+
+- PostgreSQL
+- Sequelize with `timestamps` and `underscored`
+- `TIMESTAMPTZ` used for all date fields
+
+---
+
+## 📄 License
+
+MIT License

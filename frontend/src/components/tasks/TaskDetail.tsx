@@ -5,13 +5,13 @@ import { X, Loader2, Send, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/common/StatusBadge";
-import { TASK_QUERY } from "@/graphql/queries";
+import { PROJECT_QUERY, TASK_QUERY } from "@/graphql/queries";
 import { ADD_TASK_COMMENT_MUTATION, DELETE_TASK_MUTATION } from "@/graphql/mutations";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { closeTaskDetailModal, openEditTaskModal } from "@/store/uiSlice";
-import { toast } from "sonner";
+
 import type { Task, TaskComment } from "@/types";
-import { cn } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 interface TaskDetailProps {
   taskId: string;
@@ -29,6 +29,7 @@ interface AddCommentResponse {
 export const TaskDetail = ({ taskId, projectId }: TaskDetailProps) => {
   const dispatch = useAppDispatch();
   const [newComment, setNewComment] = useState("");
+  const user = useAppSelector((state) => state.auth.user);
 
   const { data, loading, error } = useQuery<TaskResponse>(TASK_QUERY, {
     variables: { taskId },
@@ -43,14 +44,18 @@ export const TaskDetail = ({ taskId, projectId }: TaskDetailProps) => {
 
   const [deleteTask, { loading: deletingTask }] = useMutation(DELETE_TASK_MUTATION, {
     variables: { id: taskId },
+      refetchQueries: [{ query: PROJECT_QUERY, variables: { projectId } }],
+      awaitRefetchQueries: true,
+    
   });
 
   const handleAddComment = async () => {
+    console.log("Adding comment:", newComment);
     if (!newComment.trim()) return;
 
     try {
       await addComment({
-        variables: { taskId, content: newComment.trim() },
+        variables: { taskId, content: newComment.trim(), authorEmail:  user?.email || "unknown@example.com"},
       });
       setNewComment("");
       toast.success("Comment added");
@@ -182,7 +187,7 @@ export const TaskDetail = ({ taskId, projectId }: TaskDetailProps) => {
                           {comment.authorEmail.split("@")[0]}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {format(new Date(Number(comment.createdAt)), "MMM d, h:mm a")}
+                          {format(new Date(comment.createdAt), "MMM d, h:mm a")}
                         </span>
                       </div>
                       <p className="text-sm text-foreground whitespace-pre-wrap">

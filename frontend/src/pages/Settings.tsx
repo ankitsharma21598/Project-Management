@@ -1,5 +1,5 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Settings as SettingsIcon, User, Building2, Bell, Shield } from "lucide-react";
+import { User, Building2, Bell, Shield } from "lucide-react";
 import { useAppSelector } from "@/store/hooks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

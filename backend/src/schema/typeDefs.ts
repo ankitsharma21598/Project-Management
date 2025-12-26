@@ -83,17 +83,46 @@ export const typeDefs = gql`
   }
 
   enum ProjectStatus {
-    planning
-    active
-    on_hold
-    completed
+    PLANNING
+    ACTIVE
+    ON_HOLD
+    COMPLETED
   }
 
   enum TaskStatus {
-    todo
-    in_progress
-    done
+    TODO
+    IN_PROGRESS
+    DONE
   }
+
+  input UpdateProjectInput {
+    name: String
+    status: ProjectStatus
+    description: String
+    dueDate: String
+  }
+
+  input CreateProjectInput {
+    name: String
+    description: String
+    dueDate: String
+  }
+
+  input UpdateTaskInput {
+    title: String
+    description: String
+    status: TaskStatus
+    assigneeEmail: String
+  }
+    
+  input CreateTaskInput {
+    projectId: ID!
+    title: String!
+    description: String
+    status: TaskStatus
+    assigneeEmail: String
+  }
+
 
   type Query {
    # Auth queries
@@ -154,49 +183,35 @@ export const typeDefs = gql`
 
     # Project mutations
     createProject(
-      organizationId: ID!
-      name: String!
-      status: ProjectStatus
-      description: String
-      dueDate: String
+      input: CreateProjectInput!
     ): Project!
     
     updateProject(
       id: ID!
-      name: String
-      status: ProjectStatus
-      description: String
-      dueDate: String
+      input: UpdateProjectInput!
     ): Project!
     
     deleteProject(id: ID!): Boolean!
 
     # Task mutations
     createTask(
-      projectId: ID!
-      title: String!
-      description: String
-      status: TaskStatus
-      assigneeEmail: String
+      input: CreateTaskInput!
     ): Task!
     
     updateTask(
       id: ID!
-      title: String
-      description: String
-      status: TaskStatus
-      assigneeEmail: String
+      input: UpdateTaskInput
     ): Task!
     
     deleteTask(id: ID!): Boolean!
 
     # Comment mutations
-    addComment(
+    addTaskComment(
       taskId: ID!
       content: String!
       authorEmail: String!
     ): TaskComment!
     
-    deleteComment(id: ID!): Boolean!
+    deleteTaskComment(id: ID!): Boolean!
   }
 `;

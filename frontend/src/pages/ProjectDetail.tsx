@@ -1,22 +1,18 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
-import { ArrowLeft, Calendar, Loader2 } from "lucide-react";
-import { format } from "date-fns";
+import { ArrowLeft } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { TaskBoard } from "@/components/tasks/TaskBoard";
 import { TaskForm } from "@/components/tasks/TaskForm";
 import { TaskDetail } from "@/components/tasks/TaskDetail";
-import { StatusBadge } from "@/components/common/StatusBadge";
 import { ErrorBanner } from "@/components/common/ErrorBanner";
 import { KanbanColumnSkeleton } from "@/components/common/LoadingSkeleton";
 import { Button } from "@/components/ui/button";
 import { PROJECT_QUERY } from "@/graphql/queries";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import {
-  closeCreateTaskModal,
   closeEditTaskModal,
-  closeTaskDetailModal,
 } from "@/store/uiSlice";
 import type { Project, TaskStatus } from "@/types";
 

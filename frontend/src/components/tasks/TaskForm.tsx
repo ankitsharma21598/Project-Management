@@ -14,8 +14,9 @@ import {
 } from "@/components/ui/select";
 import { CREATE_TASK_MUTATION, UPDATE_TASK_MUTATION } from "@/graphql/mutations";
 import { PROJECT_QUERY } from "@/graphql/queries";
-import { toast } from "sonner";
+
 import type { Task, TaskStatus } from "@/types";
+import { toast } from "react-toastify";
 
 interface TaskFormProps {
   projectId: string;
@@ -38,6 +39,7 @@ export const TaskForm = ({
   initialStatus = "TODO",
   onClose,
 }: TaskFormProps) => {
+  
   const isEditing = !!task;
 
   const [title, setTitle] = useState(task?.title || "");
@@ -48,7 +50,11 @@ export const TaskForm = ({
   const [createTask, { loading: createLoading }] = useMutation<CreateTaskResponse>(
     CREATE_TASK_MUTATION,
     {
-      refetchQueries: [{ query: PROJECT_QUERY, variables: { projectId } }],
+      refetchQueries: [{ query: PROJECT_QUERY, variables: { projectId }, }],
+      awaitRefetchQueries: true,
+      onCompleted: () => {
+        console.log("✅ Task created & refetch triggered");
+      }
     }
   );
 
@@ -56,6 +62,7 @@ export const TaskForm = ({
     UPDATE_TASK_MUTATION,
     {
       refetchQueries: [{ query: PROJECT_QUERY, variables: { projectId } }],
+      awaitRefetchQueries: true,
     }
   );
 

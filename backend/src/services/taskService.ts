@@ -19,7 +19,7 @@ export async function getTaskById(id: string): Promise<TaskAttributes | null> {
   });
 }
 
-export async function createTask(input: CreateTaskInput): Promise<TaskAttributes> {
+export async function createTask({ input }:{input: CreateTaskInput}): Promise<TaskAttributes> {
   // Validate input
   validateRequired(input.projectId, 'Project ID');
   validateRequired(input.title, 'Task title');
@@ -48,10 +48,16 @@ export async function createTask(input: CreateTaskInput): Promise<TaskAttributes
 }
 
 export async function updateTask(id: string, input: UpdateTaskInput): Promise<TaskAttributes> {
+  
+  console.log("Params ==> ",id,input);
+  
   const task = await getTaskById(id);
   if (!task) {
     throw new Error('Task not found');
   }
+
+  console.log("Task ===>",input.title);
+  
 
   if (input.status && !validateTaskStatus(input.status)) {
     throw new Error('Invalid task status');
@@ -60,6 +66,7 @@ export async function updateTask(id: string, input: UpdateTaskInput): Promise<Ta
   if (input.assigneeEmail && !validateEmail(input.assigneeEmail)) {
     throw new Error('Invalid assignee email format');
   }
+
 
   await Task.update({
     title: input.title,
@@ -78,6 +85,6 @@ export async function deleteTask(id: string): Promise<boolean> {
     throw new Error('Task not found');
   }
 
-  await Task.destroy();
+  await Task.destroy({ where: { id } });
   return true;
 }

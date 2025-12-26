@@ -25,6 +25,8 @@ export function validateDate(date: string): boolean {
 }
 
 export function validateRequired(value: any, fieldName: string): void {
+  console.log("validateRequired ==>>",value,fieldName);
+  
   if (!value || (typeof value === 'string' && value.trim() === '')) {
     throw new Error(`${fieldName} is required`);
   }

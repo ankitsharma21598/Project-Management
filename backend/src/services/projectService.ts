@@ -3,6 +3,7 @@ import { CreateProjectInput, UpdateProjectInput, Context } from '../types';
 import { validateRequired, validateProjectStatus, validateDate } from '../utils/validators';
 import { calculateTaskStats } from '../utils/helpers';
 import { ProjectAttributes } from '../models/Project';
+import { log } from 'node:console';
 
 export async function getAllProjects(organizationId: string) {
   return await Project.findAll({
@@ -25,17 +26,12 @@ export async function getProjectById(id: string, context: Context) {
 }
 
 export async function createProject(
-  input: CreateProjectInput,
+  { input }: { input: CreateProjectInput },
   context: Context
 ): Promise<ProjectAttributes> {
   // Validate input
-  validateRequired(input.organizationId, 'Organization ID');
+  validateRequired(context.organizationId, 'Organization ID');
   validateRequired(input.name, 'Project name');
-
-  // Check organization access
-  if (context.organizationId && input.organizationId !== context.organizationId) {
-    throw new Error('Unauthorized: Cannot create project for another organization');
-  }
 
   if (input.status && !validateProjectStatus(input.status)) {
     throw new Error('Invalid project status');
@@ -46,7 +42,7 @@ export async function createProject(
   }
 
   return await Project.create({
-    organizationId: input.organizationId,
+    organizationId: context.organizationId,
     name: input.name,
     status: input.status || 'planning',
     description: input.description || '',
@@ -60,6 +56,7 @@ export async function updateProject(
   context: Context
 ): Promise<ProjectAttributes> {
   const project = await getProjectById(id, context);
+  
   if (!project) {
     throw new Error('Project not found');
   }
@@ -72,8 +69,12 @@ export async function updateProject(
     throw new Error('Invalid due date format');
   }
 
-  await project.update(input);
-  return project;
+  try {
+    await project.update(input);
+    return project;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function deleteProject(id: string, context: Context): Promise<boolean> {

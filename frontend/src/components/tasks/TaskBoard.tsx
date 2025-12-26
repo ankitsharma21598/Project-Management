@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -10,14 +10,13 @@ import {
   useSensors,
   closestCorners,
 } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
 import { useMutation } from "@apollo/client/react";
 import { Task, TaskStatus } from "@/types";
 import { TaskColumn } from "./TaskColumn";
 import { TaskCard } from "./TaskCard";
 import { UPDATE_TASK_STATUS_MUTATION } from "@/graphql/mutations";
 import { PROJECT_QUERY } from "@/graphql/queries";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 
 interface TaskBoardProps {
   tasks: Task[];
@@ -30,6 +29,10 @@ const COLUMNS: TaskStatus[] = ["TODO", "IN_PROGRESS", "DONE", "BLOCKED"];
 export const TaskBoard = ({ tasks, projectId, onAddTask }: TaskBoardProps) => {
   const [localTasks, setLocalTasks] = useState(tasks);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  useEffect(() => {
+    setLocalTasks(tasks);
+  }, [tasks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -52,10 +55,7 @@ export const TaskBoard = ({ tasks, projectId, onAddTask }: TaskBoardProps) => {
   };
 
   localTasks.forEach((task) => {
-
-    const normalizedStatus = task.status.toUpperCase() as TaskStatus;
-
-    tasksByStatus[normalizedStatus].push(task);
+    tasksByStatus[task.status].push(task);
   });
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -129,6 +129,8 @@ export const TaskBoard = ({ tasks, projectId, onAddTask }: TaskBoardProps) => {
 
     const originalTask = tasks.find((t) => t.id === activeId);
     if (originalTask && originalTask.status !== newStatus) {
+      console.log("Updating task status:", activeId, "from", originalTask.status, "to", newStatus);
+
       try {
         await updateTaskStatus({
           variables: { id: activeId, status: newStatus },

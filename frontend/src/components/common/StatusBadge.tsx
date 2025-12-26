@@ -58,7 +58,7 @@ export const StatusBadge = ({
   size = "md",
   className,
 }: StatusBadgeProps) => {
-  const config = statusConfig[status.toUpperCase() as keyof typeof statusConfig];
+  const config = statusConfig[status as keyof typeof statusConfig];
   
   // console.log("Config ==>",config);
   
@@ -84,7 +84,7 @@ export const StatusBadge = ({
             ? "bg-destructive"
             : status === "COMPLETED"
             ? "bg-primary"
-            : status.toUpperCase() === "PLANNING"
+            : status === "PLANNING"
             ? "bg-primary"
             : "bg-muted-foreground"
             
