@@ -79,6 +79,20 @@ export async function updateTask(id: string, input: UpdateTaskInput): Promise<Ta
   return task;
 }
 
+export async function updateTaskStatus(id: string, status: string): Promise<TaskAttributes> {
+  const task = await getTaskById(id);
+  if (!task) {
+    throw new Error('Task not found');
+  }
+
+  if (!validateTaskStatus(status)) {
+    throw new Error('Invalid task status');
+  }
+
+  await Task.update({ status }, { where: { id } });
+  return task;
+}
+
 export async function deleteTask(id: string): Promise<boolean> {
   const task = await getTaskById(id);
   if (!task) {

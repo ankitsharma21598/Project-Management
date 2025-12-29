@@ -162,6 +162,12 @@ export const resolvers = {
       return await taskService.updateTask(id, input);
     },
 
+    updateTaskStatus: async (_: any, args: any, context: Context) => {
+      console.log("Params ==> ",args);
+      const { id, status } = args;
+      return await taskService.updateTaskStatus(id, status);
+    },
+
     deleteTask: async (_: any, { id }: { id: string }) => {
       return await taskService.deleteTask(id);
     },

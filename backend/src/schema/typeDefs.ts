@@ -202,6 +202,11 @@ export const typeDefs = gql`
       id: ID!
       input: UpdateTaskInput
     ): Task!
+
+    updateTaskStatus(
+      id: ID!
+      status: TaskStatus!
+    ): Task!
     
     deleteTask(id: ID!): Boolean!
 

@@ -87,7 +87,7 @@ export const UPDATE_TASK_MUTATION = gql`
 
 export const UPDATE_TASK_STATUS_MUTATION = gql`
   mutation UpdateTaskStatus($id: ID!, $status: TaskStatus!) {
-    updateTask(id: $id, status: $status) {
+    updateTaskStatus(id: $id, status: $status) {
       id
       status
     }

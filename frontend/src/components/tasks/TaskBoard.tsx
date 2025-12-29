@@ -135,8 +135,7 @@ export const TaskBoard = ({ tasks, projectId, onAddTask }: TaskBoardProps) => {
         await updateTaskStatus({
           variables: { id: activeId, status: newStatus },
           optimisticResponse: {
-            updateTask: {
-              __typename: "Task",
+            updateTaskStatus: {
               id: activeId,
               status: newStatus,
             },

@@ -11,8 +11,6 @@ import { resolvers } from './schema/resolvers';
 import { authMiddleware, AuthRequest, jwtAuthMiddleware } from './middleware/auth';
 import { tenantContextMiddleware } from './middleware/tenantContext';
 
-
-
 async function startServer(): Promise<void> {
   try {
     // Initialize Express app
