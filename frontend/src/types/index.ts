@@ -47,6 +47,15 @@ export interface CreateProjectInput {
   dueDate?: string;
 }
 
+export interface RegisterInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  organizationId: string;
+  role: string;
+}
+
 export interface UpdateProjectInput {
   name?: string;
   description?: string;

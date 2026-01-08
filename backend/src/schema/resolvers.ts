@@ -102,10 +102,14 @@ export const resolvers = {
 
      // ========== Auth Mutations ==========
     signup: async (_: any, args: any) => {
+      console.log("Args ===>",args);
+      
       return await authService.signup(args);
     },
 
     signin: async (_: any, args: any) => {
+      console.log("Args ===>",args);
+      
       return await authService.signin(args);
     },
 

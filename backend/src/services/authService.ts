@@ -4,6 +4,7 @@ import { generateToken } from '../middleware/auth';
 import validator from 'validator';
 import { UserAttributes } from '../models/User';
 import { comparePassword } from '../utils/userHelpers';
+import { log } from 'node:console';
 
 export interface SignupInput {
   firstName: string;
@@ -34,7 +35,9 @@ export interface AuthResponse {
 /**
  * User signup with optional organization creation
  */
-export async function signup(input: SignupInput): Promise<AuthResponse> {
+export async function signup({ input }: { input: SignupInput }): Promise<AuthResponse> {
+  console.log("Input ===>",input);
+  
   // Validate input
   if (!input.firstName || !input.firstName.trim()) {
     throw new Error('First name is required');
@@ -125,6 +128,8 @@ export async function signup(input: SignupInput): Promise<AuthResponse> {
  * User signin
  */
 export async function signin(input: SigninInput): Promise<AuthResponse> {
+  console.log("Input ====>",input);
+  
   // Validate input
   if (!input.email || !validator.isEmail(input.email)) {
     throw new Error('Valid email is required');

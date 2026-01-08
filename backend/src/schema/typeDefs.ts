@@ -123,6 +123,15 @@ export const typeDefs = gql`
     assigneeEmail: String
   }
 
+  input RegisterInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    organizationName: String
+    organizationSlug: String
+  }
+
 
   type Query {
    # Auth queries
@@ -151,13 +160,9 @@ export const typeDefs = gql`
 
   type Mutation {
   # Auth mutations
+
     signup(
-      firstName: String!
-      lastName: String!
-      email: String!
-      password: String!
-      organizationName: String
-      organizationSlug: String
+      input: RegisterInput!
     ): AuthPayload!
 
     signin(email: String!, password: String!): AuthPayload!

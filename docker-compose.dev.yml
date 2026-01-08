@@ -24,6 +24,11 @@ services:
       - ./backend/.env
     ports:
       - "4000:4000"
+    volumes:
+      - ./backend/src:/app/src      # mount local source code
+      - ./backend/package.json:/app/package.json
+      - ./backend/tsconfig.json:/app/tsconfig.json
+    command: npm run dev            # use ts-node-dev
     depends_on:
       - postgres
 

@@ -63,6 +63,8 @@ export const AuthForm = () => {
           navigate("/");
         }
       } else {
+        console.log("INput ===>",email);
+        
         const { data } = await register({
           variables: {
             input: { email, password, firstName, lastName },
